@@ -94,7 +94,7 @@ function configure_docker() {
 configure_docker
 
 function start_docker() {
-	if ( docker stats --no-stream >/dev/null 2>&1 )
+	if ( docker stats --no-stream 2>/dev/null )
 		then
 		echo "${blue}Docker is up and running...${reset}"
 		return
@@ -107,8 +107,10 @@ function start_docker() {
 	while (! docker stats --no-stream >/dev/null 2>&1 )
 		do
 		echo -n "${blue}.${reset}"
-		sleep 1
+		sleep 5
 	done
+
+	echo "${blue}Docker is up and running...${reset}"
 }
 
 start_docker
