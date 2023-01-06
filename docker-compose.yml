@@ -1,0 +1,47 @@
+services:
+  frontend:
+    container_name: frontend
+
+    build:
+      context: ./src/frontend
+      args:
+        - WORKDIR=/app/frontend/
+
+    depends_on:
+      - backend
+      - database
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src/frontend/src/:/app/frontend/
+
+  backend:
+    container_name: backend
+
+    build:
+      context: ./src/backend
+      args:
+        - WORKDIR=/app/backend/
+      
+    depends_on:
+      - database
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - backend-network
+    volumes:
+      - ./src/backend/src:/app/backend/
+
+  database:
+    image: 'bitnami/postgresql:latest'
+    networks:
+      - backend-network
+
+volumes:
+  db-data:
+    name: "db-data"
+
+networks:
+  backend-network: {}
